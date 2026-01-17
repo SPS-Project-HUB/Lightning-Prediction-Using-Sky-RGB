@@ -1,1 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lightning Prediction System Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0c2461 0%, #1e3799 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1 {
+            color: #f6b93b;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            color: #81ecec;
+            font-size: 1.2rem;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: rgba(30, 40, 70, 0.8);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 5px solid #3498db;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .card-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #74b9ff;
+            font-size: 1.4rem;
+        }
+        
+        .card-title i {
+            margin-right: 12px;
+            font-size: 1.6rem;
+        }
+        
+        .sensor-data {
+            font-size: 2.2rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+        
+        .sensor-unit {
+            font-size: 1rem;
+            color: #81ecec;
+        }
+        
+        .noise-level {
+            margin-top: 20px;
+        }
+        
+        .noise-bar {
+            height: 20px;
+            background-color: #2c3e50;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+        
+        .noise-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .noise-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+        }
+        
+        .risk-card {
+            border-left-color: #e74c3c;
+            grid-column: span 2;
+        }
+        
+        .risk-level {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .risk-value {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+        }
+        
+        .low { color: #2ecc71; }
+        .medium { color: #f39c12; }
+        .high { color: #e74c3c; }
+        
+        .risk-description {
+            background-color: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.95rem;
+        }
+        
+        .lightning-event {
+            border-left-color: #f1c40f;
+        }
+        
+        .lightning-distance {
+            font-size: 2.5rem;
+            color: #f1c40f;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .sky-condition {
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+        
+        .dark { color: #636e72; }
+        .cloudy { color: #b2bec3; }
+        .clear { color: #74b9ff; }
+        
+        .connection-status {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .status-item {
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+        
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        
+        .connected { background-color: #2ecc71; }
+        .disconnected { background-color: #e74c3c; }
+        
+        .code-preview {
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .code-header {
+            color: #f6b93b;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .code-section {
+            color: #81ecec;
+            margin: 15px 0 5px 0;
+        }
+        
+        .code-line {
+            margin: 5px 0;
+            padding-left: 20px;
+        }
+        
+        .comment { color: #7f8c8d; }
+        .define { color: #fd79a8; }
+        .pin { color: #55efc4; }
+        .value { color: #ffeaa7; }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .risk-card {
+                grid-column: span 1;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-bolt"></i> Lightning Prediction System</h1>
+            <p class="subtitle">Real-time monitoring of atmospheric conditions for lightning risk assessment</p>
+        </header>
+        
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-thermometer-half"></i>
+                    <h2>Temperature & Humidity</h2>
+                </div>
+                <div class="sensor-data">
+                    <span id="temperature">23.5</span>
+                    <span class="sensor-unit">°C</span>
+                </div>
+                <div class="sensor-data">
+                    <span id="humidity">65</span>
+                    <span class="sensor-unit">% RH</span>
+                </div>
+                <div class="noise-level">
+                    <div class="noise-label">
+                        <span>DHT11 Sensor</span>
+                        <span id="dht-status">Active</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-cloud"></i>
+                    <h2>Sky Conditions</h2>
+                </div>
+                <div class="sky-condition" id="sky-condition">CLOUDY</div>
+                <div class="sensor-data">
+                    <span id="brightness">2100</span>
+                    <span class="sensor-unit">lux</span>
+                </div>
+                <div class="noise-level">
+                    <div class="noise-label">
+                        <span>TCS34725 RGB Sensor</span>
+                        <span id="rgb-status">Active</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">
+                    <i class="fas fa-volume-up"></i>
+                    <h2>Noise Levels</h2>
+                </div>
+                <div class="noise-level">
+                    <div class="noise-label">
+                        <span>HV Pulse Noise</span>
+                        <span id="hv-noise-value">3/10</span>
+                    </div>
+                    <div class="noise-bar">
+                        <div class="noise-fill" id="hv-noise-bar" style="width: 30%; background-color: #3498db;"></div>
+                    </div>
+                </div>
+                <div class="noise-level">
+                    <div class="noise-label">
+                        <span>Lightning Sensor Noise</span>
+                        <span id="lightning-noise-value">5/10</span>
+                    </div>
+                    <div class="noise-bar">
+                        <div class="noise-fill" id="lightning-noise-bar" style="width: 50%; background-color: #9b59b6;"></div>
+                    </div>
+                </div>
+                <div class="noise-level">
+                    <div class="noise-label">
+                        <span>Total Noise</span>
+                        <span id="total-noise-value">8/20</span>
+                    </div>
+                    <div class="noise-bar">
+                        <div class="noise-fill" id="total-noise-bar" style="width: 40%; background-color: #e74c3c;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card lightning-event">
+                <div class="card-title">
+                    <i class="fas fa-bolt"></i>
+                    <h2>Lightning Detection</h2>
+                </div>
+                <div class="lightning-distance">
+                    <span id="lightning-distance">--</span>
+                    <span class="sensor-unit">km</span>
+                </div>
+                <div class="noise-level">
+                    <div class="noise-label">
+                        <span>AS3935 Lightning Sensor</span>
+                        <span id="as3935-status">Active</span>
+                    </div>
+                </div>
+                <div class="noise-level">
+                    <div class="noise-label">
+                        <span>Last Event</span>
+                        <span id="last-event">2 min ago</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card risk-card">
+                <div class="card-title">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h2>Lightning Risk Assessment</h2>
+                </div>
+                <div class="risk-level">
+                    <div class="risk-value low" id="risk-level">LOW</div>
+                    <div class="risk-icon">
+                        <i class="fas fa-shield-alt" style="font-size: 4rem; color: #2ecc71;"></i>
+                    </div>
+                </div>
+                <div class="risk-description" id="risk-description">
+                    Current atmospheric conditions indicate a low risk of lightning activity. Continue normal operations.
+                </div>
+                <div class="noise-level">
+                    <div class="noise-label">
+                        <span>Risk Factors: Humidity > 70%, Sky Brightness < 1500, Total Noise ≥ 8</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="connection-status">
+            <div class="status-item">
+                <div class="status-dot connected"></div>
+                <span>WiFi: <strong id="wifi-status">Connected</strong></span>
+            </div>
+            <div class="status-item">
+                <div class="status-dot connected"></div>
+                <span>Firebase: <strong id="firebase-status">Connected</strong></span>
+            </div>
+            <div class="status-item">
+                <div class="status-dot connected"></div>
+                <span>Last Update: <strong id="last-update">Just now</strong></span>
+            </div>
+        </div>
+        
+        <div class="code-preview">
+            <div class="code-header">
+                <i class="fas fa-code"></i> ESP32 Pin Configuration
+            </div>
+            <div class="code-section">/******************** PIN & CONSTANT DEFINES ********************/</div>
+            <div class="code-line"><span class="define">#define</span> <span class="pin">SDA_PIN</span>     <span class="value">21</span></div>
+            <div class="code-line"><span class="define">#define</span> <span class="pin">SCL_PIN</span>     <span class="value">22</span></div>
+            <div class="code-line"><span class="comment"></span></div>
+            <div class="code-line"><span class="define">#define</span> <span class="pin">DETECT_PIN</span>  <span class="value">26</span>     <span class="comment">// HV pulse input (safe low-voltage)</span></div>
+            <div class="code-line"><span class="define">#define</span> <span class="pin">BUZZER_PIN</span>  <span class="value">27</span></div>
+            <div class="code-line"><span class="comment"></span></div>
+            <div class="code-line"><span class="define">#define</span> <span class="pin">AS3935_IRQ</span>  <span class="value">33</span>     <span class="comment">// AS3935 IRQ pin</span></div>
+            <div class="code-line"><span class="define">#define</span> <span class="pin">AS3935_ADDR</span> <span class="value">0x03</span>   <span class="comment">// I2C address</span></div>
+            <div class="code-line"><span class="comment"></span></div>
+            <div class="code-line"><span class="define">#define</span> <span class="pin">DHTPIN</span>      <span class="value">4</span></div>
+            <div class="code-line"><span class="define">#define</span> <span class="pin">DHTTYPE</span>     <span class="value">DHT11</span></div>
+            <div class="code-section">/***************************************************************/</div>
+        </div>
+    </div>
 
+    <script>
+        // Simulate real-time data updates (in a real application, this would come from Firebase)
+        function updateDashboard() {
+            // Simulate sensor data changes
+            const temperature = 20 + Math.random() * 8;
+            const humidity = 50 + Math.random() * 25;
+            const brightness = 1000 + Math.random() * 3500;
+            const hvNoise = Math.floor(Math.random() * 11);
+            const lightningNoise = Math.floor(Math.random() * 11);
+            const totalNoise = hvNoise + lightningNoise;
+            
+            // Update temperature and humidity
+            document.getElementById('temperature').textContent = temperature.toFixed(1);
+            document.getElementById('humidity').textContent = Math.floor(humidity);
+            
+            // Update brightness and sky condition
+            document.getElementById('brightness').textContent = Math.floor(brightness);
+            let skyCondition = "CLEAR";
+            let skyClass = "clear";
+            if (brightness < 1500) {
+                skyCondition = "DARK";
+                skyClass = "dark";
+            } else if (brightness < 3000) {
+                skyCondition = "CLOUDY";
+                skyClass = "cloudy";
+            }
+            const skyElement = document.getElementById('sky-condition');
+            skyElement.textContent = skyCondition;
+            skyElement.className = `sky-condition ${skyClass}`;
+            
+            // Update noise levels
+            document.getElementById('hv-noise-value').textContent = `${hvNoise}/10`;
+            document.getElementById('hv-noise-bar').style.width = `${hvNoise * 10}%`;
+            
+            document.getElementById('lightning-noise-value').textContent = `${lightningNoise}/10`;
+            document.getElementById('lightning-noise-bar').style.width = `${lightningNoise * 10}%`;
+            
+            document.getElementById('total-noise-value').textContent = `${totalNoise}/20`;
+            document.getElementById('total-noise-bar').style.width = `${totalNoise * 5}%`;
+            
+            // Update lightning distance (simulate occasional lightning events)
+            let lightningDistance = "--";
+            if (Math.random() > 0.7) {
+                lightningDistance = Math.floor(5 + Math.random() * 35);
+            }
+            document.getElementById('lightning-distance').textContent = lightningDistance;
+            
+            // Update risk assessment based on simulated data
+            let risk = "LOW";
+            let riskClass = "low";
+            let riskIconColor = "#2ecc71";
+            let riskDescription = "Current atmospheric conditions indicate a low risk of lightning activity. Continue normal operations.";
+            
+            if (humidity > 70 && brightness < 1500 && totalNoise >= 8) {
+                risk = "HIGH";
+                riskClass = "high";
+                riskIconColor = "#e74c3c";
+                riskDescription = "HIGH RISK! Conditions favorable for lightning. Take immediate precautions.";
+            } else if (humidity > 55 || brightness < 2500 || totalNoise >= 5) {
+                risk = "MEDIUM";
+                riskClass = "medium";
+                riskIconColor = "#f39c12";
+                riskDescription = "Medium risk of lightning. Monitor conditions closely.";
+            }
+            
+            document.getElementById('risk-level').textContent = risk;
+            document.getElementById('risk-level').className = `risk-value ${riskClass}`;
+            document.getElementById('risk-description').textContent = riskDescription;
+            
+            // Update risk icon color
+            document.querySelector('.risk-icon i').style.color = riskIconColor;
+            
+            // Update last update time
+            const now = new Date();
+            document.getElementById('last-update').textContent = 
+                `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+            
+            // Occasionally simulate sensor issues
+            if (Math.random() > 0.95) {
+                document.getElementById('rgb-status').textContent = "Noise";
+                document.getElementById('rgb-status').style.color = "#f39c12";
+            } else {
+                document.getElementById('rgb-status').textContent = "Active";
+                document.getElementById('rgb-status').style.color = "";
+            }
+            
+            if (Math.random() > 0.98) {
+                document.getElementById('as3935-status').textContent = "Disturber";
+                document.getElementById('as3935-status').style.color = "#e74c3c";
+            } else {
+                document.getElementById('as3935-status').textContent = "Active";
+                document.getElementById('as3935-status').style.color = "";
+            }
+            
+            // Update last event time
+            const lastEventMinutes = Math.floor(Math.random() * 5);
+            if (lastEventMinutes === 0) {
+                document.getElementById('last-event').textContent = "Just now";
+            } else {
+                document.getElementById('last-event').textContent = `${lastEventMinutes} min ago`;
+            }
+        }
+        
+        // Initial data load
+        updateDashboard();
+        
+        // Update data every 3 seconds
+        setInterval(updateDashboard, 3000);
+        
+        // Simulate occasional connection issues
+        setInterval(() => {
+            if (Math.random() > 0.9) {
+                document.getElementById('wifi-status').textContent = "Reconnecting";
+                document.getElementById('wifi-status').style.color = "#f39c12";
+                document.querySelector('#wifi-status').parentElement.parentElement.querySelector('.status-dot').className = "status-dot disconnected";
+                
+                setTimeout(() => {
+                    document.getElementById('wifi-status').textContent = "Connected";
+                    document.getElementById('wifi-status').style.color = "";
+                    document.querySelector('#wifi-status').parentElement.parentElement.querySelector('.status-dot').className = "status-dot connected";
+                }, 2000);
+            }
+        }, 10000);
+    </script>
+</body>
+</html>
