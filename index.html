@@ -319,35 +319,44 @@
             margin-top: 5px;
         }
         
-        .code-preview {
-            background-color: rgba(0, 0, 0, 0.7);
-            border-radius: 10px;
-            padding: 20px;
+        .system-info {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 25px;
             margin-top: 30px;
-            overflow-x: auto;
-            font-family: 'Courier New', monospace;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
         }
         
-        .code-header {
+        .info-card {
+            background-color: rgba(30, 40, 70, 0.5);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .info-title {
+            color: #74b9ff;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .info-value {
+            font-size: 1.8rem;
+            font-weight: bold;
             color: #f6b93b;
-            margin-bottom: 15px;
-            font-size: 1.3rem;
         }
         
-        .code-section {
+        .info-unit {
+            font-size: 1rem;
             color: #81ecec;
-            margin: 15px 0 5px 0;
+            margin-left: 5px;
         }
-        
-        .code-line {
-            margin: 5px 0;
-            padding-left: 20px;
-        }
-        
-        .comment { color: #7f8c8d; }
-        .define { color: #fd79a8; }
-        .pin { color: #55efc4; }
-        .value { color: #ffeaa7; }
         
         @media (max-width: 1200px) {
             .dashboard {
@@ -377,6 +386,10 @@
             .fault-stats {
                 flex-direction: column;
                 gap: 10px;
+            }
+            
+            .system-info {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -594,23 +607,42 @@
             </div>
         </div>
         
-        <div class="code-preview">
-            <div class="code-header">
-                <i class="fas fa-code"></i> ESP32 Pin Configuration
+        <div class="system-info">
+            <div class="info-card">
+                <div class="info-title">
+                    <i class="fas fa-microchip"></i>
+                    <span>System Architecture</span>
+                </div>
+                <div class="info-value">ESP32</div>
+                <div class="info-unit">Microcontroller</div>
             </div>
-            <div class="code-section">/******************** PIN & CONSTANT DEFINES ********************/</div>
-            <div class="code-line"><span class="define">#define</span> <span class="pin">SDA_PIN</span>     <span class="value">21</span></div>
-            <div class="code-line"><span class="define">#define</span> <span class="pin">SCL_PIN</span>     <span class="value">22</span></div>
-            <div class="code-line"><span class="comment"></span></div>
-            <div class="code-line"><span class="define">#define</span> <span class="pin">DETECT_PIN</span>  <span class="value">26</span>     <span class="comment">// HV pulse input (safe low-voltage)</span></div>
-            <div class="code-line"><span class="define">#define</span> <span class="pin">BUZZER_PIN</span>  <span class="value">27</span></div>
-            <div class="code-line"><span class="comment"></span></div>
-            <div class="code-line"><span class="define">#define</span> <span class="pin">AS3935_IRQ</span>  <span class="value">33</span>     <span class="comment">// AS3935 IRQ pin</span></div>
-            <div class="code-line"><span class="define">#define</span> <span class="pin">AS3935_ADDR</span> <span class="value">0x03</span>   <span class="comment">// I2C address</span></div>
-            <div class="code-line"><span class="comment"></span></div>
-            <div class="code-line"><span class="define">#define</span> <span class="pin">DHTPIN</span>      <span class="value">4</span></div>
-            <div class="code-line"><span class="define">#define</span> <span class="pin">DHTTYPE</span>     <span class="value">DHT11</span></div>
-            <div class="code-section">/***************************************************************/</div>
+            
+            <div class="info-card">
+                <div class="info-title">
+                    <i class="fas fa-satellite-dish"></i>
+                    <span>Sampling Rate</span>
+                </div>
+                <div class="info-value">2</div>
+                <div class="info-unit">seconds</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">
+                    <i class="fas fa-database"></i>
+                    <span>Data Points</span>
+                </div>
+                <div class="info-value">7</div>
+                <div class="info-unit">parameters</div>
+            </div>
+            
+            <div class="info-card">
+                <div class="info-title">
+                    <i class="fas fa-history"></i>
+                    <span>Historical Data</span>
+                </div>
+                <div class="info-value">24</div>
+                <div class="info-unit">hours</div>
+            </div>
         </div>
     </div>
 
